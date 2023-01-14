@@ -18,6 +18,7 @@ function App() {
         <Route path='dash' element={<DashLayout />}>
 
           <Route index element={<Welcome />} />
+          
           <Route path='meals'>
             <Route index element={<MealsList />} />
           </Route>        

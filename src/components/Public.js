@@ -9,6 +9,9 @@ function Public() {
       <main>
         <p>The food you love, made easy</p>
       </main>
+      <footer>
+        <Link to="/login">Login</Link>
+      </footer>
     </section>
   )
   

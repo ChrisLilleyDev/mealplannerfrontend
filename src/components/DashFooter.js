@@ -17,7 +17,7 @@ function DashFooter() {
         title="Home"
         onClick={onGoHomeClicked}
       >
-
+        <FontAwesomeIcon icon={faHouse} />
       </button>
     )
   }
