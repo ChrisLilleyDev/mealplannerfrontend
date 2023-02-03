@@ -28,7 +28,7 @@ function Meal({ mealId }) {
         <td className="table__cell note__created">{created}</td>
         <td className="table__cell note__updated">{updated}</td>
         <td className="table__cell note__title">{meal.name}</td>
-        <td className="table__cell note__username">{meal.username}</td>
+        <td className="table__cell note__username">{meal.user}</td>
 
         <td className="table__cell">
           <button
