@@ -12,6 +12,7 @@ function Welcome() {
     <section className="Welcome">
       <p>{today}</p>
       <h1>Welcome!</h1>
+      <p><Link to="/dash/mealplans">View Meal Plans</Link></p>
       <p><Link to="/dash/meals">View Meals</Link></p>
       <p><Link to="/dash/users">View User Settings</Link></p>
     </section>

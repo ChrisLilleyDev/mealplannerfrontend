@@ -6,6 +6,7 @@ import DashLayout from './components/DashLayout'
 import Welcome from './features/auth/Welcome'
 import UsersList from './features/users/UsersList'
 import MealsList from './features/meals/MealsList'
+import MealplansList from './features/mealplans/MealplansList'
 
 function App() {
   return (
@@ -19,6 +20,10 @@ function App() {
 
           <Route index element={<Welcome />} />
           
+          <Route path='mealplans'>
+            <Route index element={<MealplansList />} />
+          </Route>        
+
           <Route path='meals'>
             <Route index element={<MealsList />} />
           </Route>        
