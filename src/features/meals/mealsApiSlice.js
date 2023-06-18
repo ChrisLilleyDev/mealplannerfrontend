@@ -33,11 +33,48 @@ export const mealsApiSlice = apiSlice.injectEndpoints({
         } else return [{ type: 'Meal', id: 'LIST' }]
       }
     }),
+    addNewMeal: builder.mutation({
+      query: initialMeal => ({
+        url: '/meals',
+        method: 'POST',
+        body: {
+          ...initialMeal,
+        }
+      }),
+      invalidatesTags: [
+        { type: 'Meal', id: "LIST" }
+      ]
+    }),
+    updateMeal: builder.mutation({
+      query: initialMeal => ({
+        url: '/meals',
+        method: 'PATCH',
+        body: {
+          ...initialMeal,
+        }
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: 'Meal', id: arg.id }
+      ]
+    }),
+    deleteMeal: builder.mutation({
+      query: ({ id }) => ({
+        url: '/meals',
+        method: 'DELETE',
+        body: { id }
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: 'Meal', id: arg.id }
+      ]
+    }),
   }),
 })
 
 export const {
   useGetMealsQuery,
+  useAddNewMealMutation,
+  useUpdateMealMutation,
+  useDeleteMealMutation,
 } = mealsApiSlice
 
 export const selectMealsResult = mealsApiSlice.endpoints.getMeals.select()

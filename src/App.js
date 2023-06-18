@@ -6,7 +6,9 @@ import DashLayout from './components/DashLayout'
 import Welcome from './features/auth/Welcome'
 import UsersList from './features/users/UsersList'
 import MealsList from './features/meals/MealsList'
+import NewMeal from './features/meals/NewMeal'
 import MealplansList from './features/mealplans/MealplansList'
+import Prefetch from './features/auth/Prefetch'
 
 function App() {
   return (
@@ -15,23 +17,26 @@ function App() {
 
         <Route index element={<Public />} />
         <Route path='login' element={<Login />} />
+        
+        <Route element={<Prefetch />}>
+          <Route path='dash' element={<DashLayout />}>
 
-        <Route path='dash' element={<DashLayout />}>
+            <Route index element={<Welcome />} />
+            
+            <Route path='mealplans'>
+              <Route index element={<MealplansList />} />
+            </Route>        
 
-          <Route index element={<Welcome />} />
-          
-          <Route path='mealplans'>
-            <Route index element={<MealplansList />} />
-          </Route>        
+            <Route path='meals'>
+              <Route index element={<MealsList />} />
+              <Route path='new' element={<NewMeal />} />
+            </Route>        
 
-          <Route path='meals'>
-            <Route index element={<MealsList />} />
-          </Route>        
+            <Route path='users'>
+              <Route index element={<UsersList />} />
+            </Route>        
 
-          <Route path='users'>
-            <Route index element={<UsersList />} />
-          </Route>        
-
+          </Route>
         </Route>
 
       </Route>

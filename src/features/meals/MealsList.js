@@ -8,7 +8,11 @@ function MealsList() {
     isSuccess,
     isError,
     error
-  } = useGetMealsQuery()
+  } = useGetMealsQuery(undefined, {
+    pollingInterval: 15000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true
+  })
 
   let content
 
