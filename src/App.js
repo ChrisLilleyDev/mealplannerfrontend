@@ -5,6 +5,9 @@ import Login from './features/auth/Login'
 import DashLayout from './components/DashLayout'
 import Welcome from './features/auth/Welcome'
 import UsersList from './features/users/UsersList'
+import IngredientsList from './features/ingredients/IngredientsList'
+import EditIngredient from './features/ingredients/EditIngredient'
+import NewIngredient from './features/ingredients/NewIngredient'
 import MealsList from './features/meals/MealsList'
 import NewMeal from './features/meals/NewMeal'
 import MealplansList from './features/mealplans/MealplansList'
@@ -26,6 +29,12 @@ function App() {
             <Route path='mealplans'>
               <Route index element={<MealplansList />} />
             </Route>        
+
+            <Route path='ingredients'>
+              <Route index element={<IngredientsList />} />
+              <Route path=':id' element={<EditIngredient />} />
+              <Route path='new' element={<NewIngredient />} />
+            </Route> 
 
             <Route path='meals'>
               <Route index element={<MealsList />} />

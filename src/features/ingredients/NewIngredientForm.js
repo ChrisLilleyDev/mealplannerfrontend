@@ -1,43 +1,40 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { useAddNewMealMutation } from "./mealsApiSlice"
+import { useAddNewIngredientMutation } from "./ingredientsApiSlice"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave } from "@fortawesome/free-solid-svg-icons"
 
-const NewMealForm = ({ users }) => {
+const NewIngredientForm = ({ users }) => {
 
-    const [addNewMeal, {
+    const [addNewIngredient, {
         isLoading,
         isSuccess,
         isError,
         error
-    }] = useAddNewMealMutation()
+    }] = useAddNewIngredientMutation()
 
     const navigate = useNavigate()
 
-    const [name, setName] = useState('')
-    const [description, setDescription] = useState('')
     const [userId, setUserId] = useState(users[0].id)
+    const [name, setName] = useState('')
 
     useEffect(() => {
         if (isSuccess) {
-            setName('')
-            setDescription('')
             setUserId('')
-            navigate('/dash/meals')
+            setName('')
+            navigate('/dash/ingredients')
         }
     }, [isSuccess, navigate])
 
-    const onNameChanged = e => setName(e.target.value)
-    const onDescriptionChanged = e => setDescription(e.target.value)
     const onUserIdChanged = e => setUserId(e.target.value)
+    const onNameChanged = e => setName(e.target.value)
 
-    const canSave = [name, description, userId].every(Boolean) && !isLoading
+    const canSave = [name, userId].every(Boolean) && !isLoading
 
-    const onSaveMealClicked = async (e) => {
+    const onSaveIngredientClicked = async (e) => {
         e.preventDefault()
         if (canSave) {
-            await addNewMeal({ user: userId, name, description })
+            await addNewIngredient({ user: userId, name })
         }
     }
 
@@ -52,15 +49,14 @@ const NewMealForm = ({ users }) => {
 
     const errClass = isError ? "errmsg" : "offscreen"
     const validNameClass = !name ? "form__input--incomplete" : ''
-    const validDescriptionClass = !description ? "form__input--incomplete" : ''
 
     const content = (
         <>
             <p className={errClass}>{error?.data?.message}</p>
 
-            <form className="form" onSubmit={onSaveMealClicked}>
+            <form className="form" onSubmit={onSaveIngredientClicked}>
                 <div className="form__title-row">
-                    <h2>New Meal</h2>
+                    <h2>New Ingredient</h2>
                     <div className="form__action-buttons">
                         <button
                             className="icon-button"
@@ -83,16 +79,6 @@ const NewMealForm = ({ users }) => {
                     onChange={onNameChanged}
                 />
 
-                <label className="form__label" htmlFor="description">
-                    Description:</label>
-                <textarea
-                    className={`form__input form__input--text ${validDescriptionClass}`}
-                    id="description"
-                    name="description"
-                    value={description}
-                    onChange={onDescriptionChanged}
-                />
-
                 <label className="form__label form__checkbox-container" htmlFor="username">
                     ASSIGNED TO:</label>
                 <select
@@ -112,4 +98,4 @@ const NewMealForm = ({ users }) => {
     return content
 }
 
-export default NewMealForm
+export default NewIngredientForm

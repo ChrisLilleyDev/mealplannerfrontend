@@ -15,6 +15,8 @@ function Welcome() {
       <p><Link to="/dash/mealplans">View Meal Plans</Link></p>
       <p><Link to="/dash/meals">View Meals</Link></p>
       <p><Link to="/dash/meals/new">Add New Meal</Link></p>
+      <p><Link to="/dash/ingredients">View Ingredients</Link></p>
+      <p><Link to="/dash/ingredients/new">Add New Ingredient</Link></p>
       <p><Link to="/dash/users">View User Settings</Link></p>
     </section>
   )
