@@ -1,12 +1,34 @@
-import { useSelector } from 'react-redux'
-import { selectAllUsers } from '../users/usersApiSlice'
-import NewMealForm from './NewMealForm'
+import { useGetIngredientsQuery } from '../ingredients/ingredientsApiSlice'
+import { NewMealForm } from './NewMealForm'
 
-function NewMeal() {
-    const users = useSelector(selectAllUsers)
+export function NewMeal() {
+    const {
+        data: ingredients,
+        isLoading,
+        isSuccess,
+        isError,
+        error
+    } = useGetIngredientsQuery('ingredientsList', {
+        pollingInterval: 15000,
+        refetchOnFocus: true,
+        refetchOnMountOrArgChange: true
+    })
 
-    const content = users ? <NewMealForm users={users} /> : <p>Loading...</p>
+    let content
+
+    if (isLoading) content = <p>Loading...</p>
+
+    if (isError) {
+        content = <p className="errmsg">{error?.data?.message}</p>
+    }
+
+    if (isSuccess) {
+        const allIngredients = Object.values(ingredients.entities)
+        const ingredientsMap = new Map()
+        allIngredients.forEach(ingredient => ingredientsMap.set(ingredient.id, ingredient.name))
+
+        content = <NewMealForm allIngredients={allIngredients} ingredientsMap={ingredientsMap} />
+    }
 
     return content
 }
-export default NewMeal

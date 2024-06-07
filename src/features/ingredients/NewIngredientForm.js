@@ -4,7 +4,7 @@ import { useAddNewIngredientMutation } from "./ingredientsApiSlice"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave } from "@fortawesome/free-solid-svg-icons"
 
-const NewIngredientForm = ({ users }) => {
+export function NewIngredientForm() {
 
     const [addNewIngredient, {
         isLoading,
@@ -15,37 +15,34 @@ const NewIngredientForm = ({ users }) => {
 
     const navigate = useNavigate()
 
-    const [userId, setUserId] = useState(users[0].id)
     const [name, setName] = useState('')
 
     useEffect(() => {
         if (isSuccess) {
-            setUserId('')
             setName('')
             navigate('/dash/ingredients')
         }
     }, [isSuccess, navigate])
 
-    const onUserIdChanged = e => setUserId(e.target.value)
     const onNameChanged = e => setName(e.target.value)
 
-    const canSave = [name, userId].every(Boolean) && !isLoading
+    const canSave = !!name && !isLoading
 
     const onSaveIngredientClicked = async (e) => {
         e.preventDefault()
         if (canSave) {
-            await addNewIngredient({ user: userId, name })
+            await addNewIngredient({ name })
         }
     }
 
-    const options = users.map(user => {
-        return (
-            <option
-                key={user.id}
-                value={user.id}
-            > {user.username}</option >
-        )
-    })
+    // const options = users.map(user => {
+    //     return (
+    //         <option
+    //             key={user.id}
+    //             value={user.id}
+    //         > {user.username}</option >
+    //     )
+    // })
 
     const errClass = isError ? "errmsg" : "offscreen"
     const validNameClass = !name ? "form__input--incomplete" : ''
@@ -79,7 +76,7 @@ const NewIngredientForm = ({ users }) => {
                     onChange={onNameChanged}
                 />
 
-                <label className="form__label form__checkbox-container" htmlFor="username">
+                {/* <label className="form__label form__checkbox-container" htmlFor="username">
                     ASSIGNED TO:</label>
                 <select
                     id="username"
@@ -89,7 +86,7 @@ const NewIngredientForm = ({ users }) => {
                     onChange={onUserIdChanged}
                 >
                     {options}
-                </select>
+                </select> */}
 
             </form>
         </>
@@ -97,5 +94,3 @@ const NewIngredientForm = ({ users }) => {
 
     return content
 }
-
-export default NewIngredientForm

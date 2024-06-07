@@ -4,7 +4,7 @@ import { useAddNewMealMutation } from "./mealsApiSlice"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave } from "@fortawesome/free-solid-svg-icons"
 
-const NewMealForm = ({ users }) => {
+export function NewMealForm({ allIngredients, ingredientsMap }) {
 
     const [addNewMeal, {
         isLoading,
@@ -16,43 +16,70 @@ const NewMealForm = ({ users }) => {
     const navigate = useNavigate()
 
     const [name, setName] = useState('')
+    const [ingredients, setIngredients] = useState([])
     const [description, setDescription] = useState('')
-    const [userId, setUserId] = useState(users[0].id)
+    const [maxOccurance, setMaxOccurance] = useState(1)
+    const [timeReset, setTimeReset] = useState(7)
+    const [shorttermAdj, setShorttermAdj] = useState(3)
 
     useEffect(() => {
         if (isSuccess) {
             setName('')
+            setIngredients([])
             setDescription('')
-            setUserId('')
+            setMaxOccurance(1)
+            setTimeReset(7)
+            setShorttermAdj(3)
             navigate('/dash/meals')
         }
     }, [isSuccess, navigate])
 
     const onNameChanged = e => setName(e.target.value)
+    const onRemoveIngredientClicked = id => setIngredients(ingredients.filter(el => el !== id))
+    const onAddIngredientClicked = id => { if (!ingredients.includes(id)) setIngredients([...ingredients, id]) }
     const onDescriptionChanged = e => setDescription(e.target.value)
-    const onUserIdChanged = e => setUserId(e.target.value)
-
-    const canSave = [name, description, userId].every(Boolean) && !isLoading
+    const onMaxOccuranceChanged = e => setMaxOccurance(e.target.value)
+    const onTimeResetChanged = e => setTimeReset(e.target.value)
+    const onShorttermAdjChanged = e => setShorttermAdj(e.target.value)
 
     const onSaveMealClicked = async (e) => {
         e.preventDefault()
         if (canSave) {
-            await addNewMeal({ user: userId, name, description })
+            await addNewMeal({ name, ingredients, description, maxOccurance, timeReset, shorttermAdj })
         }
     }
 
-    const options = users.map(user => {
+    const ingredientsList = ingredients.map(id => {
         return (
-            <option
-                key={user.id}
-                value={user.id}
-            > {user.username}</option >
+            <li
+                key={id}
+                onClick={() => onRemoveIngredientClicked(id)}
+            >{ingredientsMap.get(id)}</li>
         )
     })
 
+    const allIngredientsList = allIngredients.map(ingredient => {
+        return (
+            <li
+                key={ingredient.id}
+                onClick={() => onAddIngredientClicked(ingredient.id)}
+            >{ingredient.name}</li>
+        )
+    })
+
+    const numberOptions = [1, 2, 3, 4, 5, 6, 7].map(num => {
+        return (
+            <option
+                key={num}
+                value={num}
+            >{num}</option>
+        )
+    })
+
+    const canSave = !!name && !isLoading
+
     const errClass = isError ? "errmsg" : "offscreen"
     const validNameClass = !name ? "form__input--incomplete" : ''
-    const validDescriptionClass = !description ? "form__input--incomplete" : ''
 
     const content = (
         <>
@@ -83,33 +110,86 @@ const NewMealForm = ({ users }) => {
                     onChange={onNameChanged}
                 />
 
+                <div className="form__row">
+                    <div className="form__divider">
+                        <label className="form__label" htmlFor="meal-ingredients">
+                            Ingredients:</label>
+                        <ul
+                            id="meal-ingredients"
+                            name="meal-ingredients"
+                        >
+                            {ingredientsList}
+                        </ul>
+                    </div>
+
+                    <div className="form__divider">
+                        <label className="form__label" html="all-ingredients">
+                            Add:</label>
+                        <ul
+                            id="all-ingredients"
+                            name="all-ingredients"
+                        >
+                            {allIngredientsList}
+                        </ul>
+                    </div>
+                </div>
+
                 <label className="form__label" htmlFor="description">
                     Description:</label>
                 <textarea
-                    className={`form__input form__input--text ${validDescriptionClass}`}
+                    className="form__input form__input--text"
                     id="description"
                     name="description"
                     value={description}
                     onChange={onDescriptionChanged}
                 />
 
-                <label className="form__label form__checkbox-container" htmlFor="username">
-                    ASSIGNED TO:</label>
-                <select
-                    id="username"
-                    name="username"
-                    className="form__select"
-                    value={userId}
-                    onChange={onUserIdChanged}
-                >
-                    {options}
-                </select>
+                <div className="form__row">
+                    <div className="form__divider">
+                        <label className="form__label" htmlFor="meal-max-occurance">
+                            Max occurance:</label>
+                        <select
+                            id="meal-max-occurance"
+                            name="max-occurance"
+                            className="form__select"
+                            value={maxOccurance}
+                            onChange={onMaxOccuranceChanged}
+                        >
+                            {numberOptions}
+                        </select>
+                    </div>
 
+                    <div className="form__divider">
+                        <label className="form__label" htmlFor="meal-time-reset">
+                            Time reset:</label>
+                        <select
+                            id="meal-time-reset"
+                            name="time-reset"
+                            className="form__select"
+                            value={timeReset}
+                            onChange={onTimeResetChanged}
+                        >
+                            {numberOptions}
+                        </select>
+                    </div>
+
+                    <div className="form__divider">
+                        <label className="form__label" htmlFor="meal-shortterm-adj">
+                            Frequency limit:</label>
+                        <select
+                            id="meal-shortterm-adj"
+                            name="shortterm-adj"
+                            className="form__select"
+                            value={shorttermAdj}
+                            onChange={onShorttermAdjChanged}
+                        >
+                            {numberOptions}
+                        </select>
+                    </div>
+                </div>
             </form>
         </>
     )
 
     return content
 }
-
-export default NewMealForm

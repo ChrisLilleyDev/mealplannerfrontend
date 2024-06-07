@@ -1,17 +1,19 @@
 import { useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { selectIngredientById } from './ingredientsApiSlice'
-import { selectAllUsers } from '../users/usersApiSlice'
-import EditIngredientForm from './EditIngredientForm'
+import { useGetIngredientsQuery } from './ingredientsApiSlice'
+import { EditIngredientForm } from './EditIngredientForm'
 
-function EditIngredient() {
+export function EditIngredient() {
     const { id } = useParams()
 
-    const ingredient = useSelector(state => selectIngredientById(state, id))
-    const users = useSelector(selectAllUsers)
+    const { ingredient } = useGetIngredientsQuery('ingredientsList', {
+        selectFromResult: ({ data }) => ({
+            ingredient: data?.entities[id]
+        })
+    })
 
-    const content = ingredient && users ? <EditIngredientForm ingredient={ingredient} users={users} /> : <p>Loading...</p>
+    if (!ingredient) return <p>Loading...</p>
+
+    const content = <EditIngredientForm ingredient={ingredient} />
 
     return content
 }
-export default EditIngredient

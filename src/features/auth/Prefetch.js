@@ -1,28 +1,24 @@
-import { store } from '../../app/store'
-import { usersApiSlice } from '../users/usersApiSlice'
-import { ingredientsApiSlice } from '../ingredients/ingredientsApiSlice'
-import { mealsApiSlice } from '../meals/mealsApiSlice'
-import { mealplansApiSlice } from '../mealplans/mealplansApiSlice'
 import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
+import { store } from '../../app/store'
+import { constraintsApiSlice } from '../constraints/constraintsApiSlice'
+import { ingredientsApiSlice } from '../ingredients/ingredientsApiSlice'
+import { inventoriesApiSlice } from '../inventories/inventoriesApiSlice'
+import { mealplansApiSlice } from '../mealplans/mealplansApiSlice'
+import { mealsApiSlice } from '../meals/mealsApiSlice'
+import { plantemplatesApiSlice } from '../plantemplates/plantemplatesApiSlice'
+import { userApiSlice } from '../users/userApiSlice'
 
-const Prefetch = () => {
+export function Prefetch() {
     useEffect(() => {
-        console.log('subscribing')
-        const users = store.dispatch(usersApiSlice.endpoints.getUsers.initiate())
-        const ingredients = store.dispatch(ingredientsApiSlice.endpoints.getUsers.initiate())
-        const meals = store.dispatch(mealsApiSlice.endpoints.getMeals.initiate())
-        const mealplans = store.dispatch(mealplansApiSlice.endpoints.getMeals.initiate())
-
-        return () => {
-            console.log('unsubscribing')
-            users.unsubscribe()
-            ingredients.unsubscribe()
-            meals.unsubscribe()
-            mealplans.unsubscribe()
-        }
+        store.dispatch(constraintsApiSlice.util.prefetch('getConstraints', 'constraintsList', { force: true }))
+        store.dispatch(ingredientsApiSlice.util.prefetch('getIngredients', 'ingredientsList', { force: true }))
+        store.dispatch(inventoriesApiSlice.util.prefetch('getInventories', 'inventoriesList', { force: true }))
+        store.dispatch(mealplansApiSlice.util.prefetch('getMealplans', 'mealplansList', { force: true }))
+        store.dispatch(mealsApiSlice.util.prefetch('getMeals', 'mealsList', { force: true }))
+        store.dispatch(plantemplatesApiSlice.util.prefetch('getPlantemplates', 'plantemplatesList', { force: true }))
+        store.dispatch(userApiSlice.util.prefetch('getUser', 'userList', { force: true }))
     }, [])
 
     return <Outlet />
 }
-export default Prefetch

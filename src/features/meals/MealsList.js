@@ -1,14 +1,14 @@
 import { useGetMealsQuery } from "./mealsApiSlice"
-import Meal from "./Meal"
+import { Meal } from "./Meal"
 
-function MealsList() {
+export function MealsList() {
   const {
     data: meals,
     isLoading,
     isSuccess,
     isError,
     error
-  } = useGetMealsQuery(undefined, {
+  } = useGetMealsQuery('mealList', {
     pollingInterval: 15000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
@@ -50,5 +50,3 @@ function MealsList() {
 
   return content
 }
-
-export default MealsList

@@ -1,14 +1,18 @@
 import { useGetMealplansQuery } from "./mealplansApiSlice"
-import Mealplan from "./Mealplan"
+import { Mealplan } from "./Mealplan"
 
-function MealplansList() {
+export function MealplansList() {
   const {
     data: mealplans,
     isLoading,
     isSuccess,
     isError,
     error
-  } = useGetMealplansQuery()
+  } = useGetMealplansQuery('mealplansList', {
+    pollingInterval: 15000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true
+  })
 
   let content
 
@@ -46,5 +50,3 @@ function MealplansList() {
 
   return content
 }
-
-export default MealplansList

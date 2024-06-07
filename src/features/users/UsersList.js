@@ -1,15 +1,18 @@
-import { useGetUsersQuery } from "./usersApiSlice"
-import User from './User'
+import { useGetUserQuery } from "./userApiSlice"
+import { User } from './User'
 
-function UsersList() {
-
+export function UsersList() {
   const {
     data: users,
     isLoading,
     isSuccess,
     isError,
     error
-  } = useGetUsersQuery()
+  } = useGetUserQuery('userList', {
+    pollingInterval: 60000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true
+  })
 
   let content
 
@@ -45,5 +48,3 @@ function UsersList() {
 
   return content
 }
-
-export default UsersList

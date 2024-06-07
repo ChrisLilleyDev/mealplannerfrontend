@@ -1,17 +1,44 @@
 import { useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { selectMealById } from './mealsApiSlice'
-import { selectAllUsers } from '../users/usersApiSlice'
-import EditMealForm from './EditMealForm'
+import { useGetMealsQuery } from './mealsApiSlice'
+import { useGetIngredientsQuery } from '../ingredients/ingredientsApiSlice'
+import { EditMealForm } from './EditMealForm'
 
-function EditMeal() {
+export function EditMeal() {
     const { id } = useParams()
 
-    const meal = useSelector(state => selectMealById(state, id))
-    const users = useSelector(selectAllUsers)
+    const { meal } = useGetMealsQuery('mealsList', {
+        selectFromResult: ({ data }) => ({
+            meal: data?.entities[id]
+        })
+    })
 
-    const content = meal && users ? <EditMealForm meal={meal} users={users} /> : <p>Loading...</p>
+    const {
+        data: ingredients,
+        isLoading,
+        isSuccess,
+        isError,
+        error
+    } = useGetIngredientsQuery('ingredientsList', {
+        pollingInterval: 15000,
+        refetchOnFocus: true,
+        refetchOnMountOrArgChange: true
+    })
+
+    let content
+
+    if (!meal || isLoading) content = <p>Loading...</p>
+
+    if (isError) {
+        content = <p className="errmsg">{error?.data?.message}</p>
+    }
+
+    if (isSuccess) {
+        const allIngredients = Object.values(ingredients.entities)
+        const ingredientsMap = new Map()
+        allIngredients.forEach(ingredient => ingredientsMap.set(ingredient.id, ingredient.name))
+
+        content = <EditMealForm meal={meal} allIngredients={allIngredients} ingredientsMap={ingredientsMap} />
+    }
 
     return content
 }
-export default EditMeal

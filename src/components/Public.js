@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 
-function Public() {
+export function Public() {
   const content = (
-    <section className="Public">
+    <section className="public">
       <header>
         <h1>Meal Planner</h1>
       </header>
@@ -14,8 +14,6 @@ function Public() {
       </footer>
     </section>
   )
-  
+
   return content
 }
-
-export default Public
